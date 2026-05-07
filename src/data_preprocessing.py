@@ -8,7 +8,7 @@ def load_and_preprocess_data(file_path="data/sales.csv"):
     df.columns = df.columns.str.strip()
     
     # Convert Date
-    df['Date'] = pd.to_datetime(df['Date'])
+    df['Date'] = pd.to_datetime(df['Date'], format='mixed', dayfirst=True)
     
     # Convert Sales Column
     df['Total'] = (
