@@ -13,3 +13,5 @@ holidays
 openpyxl
 joblib
 mlflow
+streamlit
+plotly

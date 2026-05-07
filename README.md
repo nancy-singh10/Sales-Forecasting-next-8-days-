@@ -61,6 +61,12 @@ python src/evaluate_models.py
 uvicorn api.app:app --reload
 ```
 
+### 4. Interactive Dashboard
+Visualize the results with Streamlit:
+```bash
+streamlit run dashboard.py
+```
+
 ---
 
 ## 📡 API Endpoints
