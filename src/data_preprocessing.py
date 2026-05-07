@@ -46,3 +46,4 @@ def load_and_preprocess_data(file_path="data/sales.csv"):
 if __name__ == "__main__":
     df = load_and_preprocess_data()
     print("Preprocessing completed. Dataset shape:", df.shape)
+    print(df.tail(200))

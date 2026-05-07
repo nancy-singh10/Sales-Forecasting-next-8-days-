@@ -44,3 +44,7 @@ if __name__ == "__main__":
     train, valid = get_train_val_split(df_features)
     print("Train shape:", train.shape)
     print("Valid shape:", valid.shape)
+    print("\n--- Train Data (First 10 Rows) ---")
+    print(train.head(10))
+    print("\n--- Validation Data (First 5 Rows) ---")
+    print(valid.head())
