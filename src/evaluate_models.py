@@ -71,7 +71,7 @@ def evaluate_lstm(valid):
         scaler = MinMaxScaler()
         scaler.fit(train[['Total']])
         
-        model = load_model("models/lstm.h5")
+        model = load_model("models/lstm.keras")
         preds_all = []
         window = 8
         

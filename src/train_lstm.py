@@ -49,8 +49,8 @@ def train_lstm():
         verbose=1
     )
     
-    model.save("models/lstm.h5")
-    print("LSTM model saved to models/lstm.h5")
+    model.save("models/lstm.keras")
+    print("LSTM model saved to models/lstm.keras")
 
 if __name__ == "__main__":
     train_lstm()
