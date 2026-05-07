@@ -11,18 +11,25 @@ def train_prophet_model():
     df_features = perform_feature_engineering(df)
     train, valid = get_train_val_split(df_features)
 
-    print("Training Prophet model...")
-    prophet_df = train.reset_index()[['Date', 'Total']]
-    prophet_df.columns = ['ds', 'y']
+    print("Training Prophet models per state (this may take a minute)...")
+    models = {}
+    states = train['State'].unique()
     
-    model = Prophet()
-    model.fit(prophet_df)
-    
-    future = model.make_future_dataframe(periods=8, freq='W')
-    forecast = model.predict(future)
-    
-    joblib.dump(model, "models/prophet.pkl")
-    print("Prophet model saved to models/prophet.pkl")
+    for state in states:
+        state_train = train[train['State'] == state]
+        prophet_df = state_train.reset_index()[['Date', 'Total']]
+        prophet_df.columns = ['ds', 'y']
+        
+        try:
+            model = Prophet()
+            model.fit(prophet_df)
+            models[state] = model
+        except Exception as e:
+            print(f"Failed to train Prophet for {state}: {e}")
+            models[state] = None
+            
+    joblib.dump(models, "models/prophet.pkl")
+    print("Prophet models saved to models/prophet.pkl")
 
 if __name__ == "__main__":
     train_prophet_model()

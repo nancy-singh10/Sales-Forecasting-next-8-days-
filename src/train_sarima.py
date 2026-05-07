@@ -1,4 +1,5 @@
 import joblib
+# pyrefly: ignore [missing-import]
 from statsmodels.tsa.statespace.sarimax import SARIMAX
 import warnings
 warnings.filterwarnings('ignore')
@@ -11,17 +12,26 @@ def train_sarima():
     df_features = perform_feature_engineering(df)
     train, valid = get_train_val_split(df_features)
 
-    print("Training SARIMA model...")
-    model = SARIMAX(
-        train['Total'],
-        order=(1,1,1),
-        seasonal_order=(1,1,1,12)
-    )
-    results = model.fit()
-    preds = results.forecast(steps=8)
+    print("Training SARIMA models per state (this may take a minute)...")
+    models = {}
+    states = train['State'].unique()
     
-    joblib.dump(results, "models/sarima.pkl")
-    print("SARIMA model saved to models/sarima.pkl")
+    for state in states:
+        state_train = train[train['State'] == state]
+        try:
+            model = SARIMAX(
+                state_train['Total'],
+                order=(1,1,1),
+                seasonal_order=(1,1,1,12)
+            )
+            results = model.fit(disp=False)
+            models[state] = results
+        except Exception as e:
+            print(f"Failed to train SARIMA for {state}: {e}")
+            models[state] = None
+            
+    joblib.dump(models, "models/sarima.pkl")
+    print("SARIMA models saved to models/sarima.pkl")
     
 if __name__ == "__main__":
     train_sarima()

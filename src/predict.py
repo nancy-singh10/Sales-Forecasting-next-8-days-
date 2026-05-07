@@ -6,8 +6,11 @@ def predict_next_8_weeks(state):
     # load model
     try:
         best_model_name = joblib.load("models/best_model_name.pkl")
-        model = joblib.load(f"models/{best_model_name}.pkl")
-    except:
+        if best_model_name in ["sarima", "prophet"]:
+            models_dict = joblib.load(f"models/{best_model_name}.pkl")
+            model = models_dict.get(state)
+        else:
+            model = joblib.load(f"models/{best_model_name}.pkl")
         best_model_name = "xgboost"
         
     # fetch latest state data

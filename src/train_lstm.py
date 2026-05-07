@@ -13,16 +13,21 @@ def train_lstm():
 
     print("Training LSTM model...")
     scaler = MinMaxScaler()
-    # Fit scaler on training data, but the prompt just says:
-    # scaled = scaler.fit_transform(df[['Total']])
-    scaled = scaler.fit_transform(train[['Total']])
+    # Fit scaler on training data
+    scaler.fit(train[['Total']])
     
     X = []
     y = []
     window = 8
-    for i in range(window, len(scaled)):
-        X.append(scaled[i-window:i])
-        y.append(scaled[i])
+    
+    # Generate sequences per state to prevent data leakage between states
+    for state in train['State'].unique():
+        state_train = train[train['State'] == state]
+        scaled = scaler.transform(state_train[['Total']])
+        
+        for i in range(window, len(scaled)):
+            X.append(scaled[i-window:i])
+            y.append(scaled[i])
         
     X_train = np.array(X)
     y_train = np.array(y)
